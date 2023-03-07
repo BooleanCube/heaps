@@ -5,15 +5,19 @@ TEST CASE GENERATOR CODE:
 
 import random as r
 
-n = 50
+n = 20000
 ops = ["INSERT [num]", "POP", "PEEK"]
-
 inp = "INSERT 34"
+val = 1
 for i in range(n):
     num = r.randint(-10e6, 10e6)
     idx = r.randrange(3)
-    inp += " | " + ops[idx].replace("[num]", str(num))
-
+    if val > 0:
+        inp += " | " + ops[idx].replace("[num]", str(num))
+    else:
+        inp += " | INSERT " + str(num)
+    if idx==0: val += 1
+    if idx==1: val -= 1
 out = ""
 l = []
 for op in inp.split(" | "):
@@ -24,7 +28,6 @@ for op in inp.split(" | "):
         out += str(l.pop(0)) + " | "
     else:
         out += str(l[0]) + " | "
-
 print(inp)
 print(out[:-3])
 **/
@@ -39,7 +42,7 @@ public class TestCase {
     public static final String OUTPUT2 = "1 | 2 | 3 | 4 | 5 | 0 | 0 | 6";
     
     // third test case (~50 operations)
-    public static final String INPUT3 = "INSERT 34 | INSERT 6870858 | PEEK | INSERT 4621435 | PEEK | INSERT 8596530 | INSERT 6442974 | PEEK | POP | PEEK | INSERT -6874564 | PEEK | POP | POP | INSERT -5942988 | INSERT 1896181 | INSERT -6597926 | INSERT 9982964 | INSERT -5685353 | PEEK | PEEK | INSERT 2748597 | POP | POP | INSERT 5133834 | INSERT 4603247 | POP | PEEK | POP | PEEK | PEEK | POP | POP | POP | PEEK | POP | POP | INSERT -8204246 | PEEK | PEEK | PEEK | PEEK | INSERT 1214153 | POP | INSERT 5413420 | INSERT 1018366 | PEEK | PEEK | INSERT 5680120 | INSERT 7854433 | POP";
-    public static final String OUTPUT3 = "34 | 34 | 34 | 34 | 4621435 | -6874564 | -6874564 | 4621435 | -6597926 | -6597926 | -6597926 | -5942988 | -5685353 | 1896181 | 1896181 | 2748597 | 2748597 | 2748597 | 4603247 | 5133834 | 6442974 | 6442974 | 6870858 | -8204246 | -8204246 | -8204246 | -8204246 | -8204246 | 1018366 | 1018366 | 1018366";
+    public static final String INPUT3 = "INSERT 34 | POP | INSERT 223762 | INSERT -3426221 | INSERT 2167863 | INSERT 6423888 | INSERT -9494678 | INSERT -2695752 | INSERT -5427779 | PEEK | POP | INSERT -216556 | INSERT -9068885 | INSERT 2849072 | POP | INSERT 1875689 | INSERT 5422704 | PEEK | INSERT 1305244 | PEEK | INSERT -6676302 | PEEK | POP | PEEK | INSERT -9462164 | POP | INSERT 685443 | INSERT -2780902 | INSERT -1933859 | PEEK | POP | PEEK | PEEK | INSERT -7974897 | INSERT 3986630 | INSERT 8942935 | INSERT -8436429 | INSERT 770129 | POP | POP | PEEK | INSERT -5647910 | POP | PEEK | INSERT -610390 | POP | PEEK | PEEK | POP | INSERT -5875704 | PEEK";
+    public static final String OUTPUT3 = "34 | -9494678 | -9494678 | -9068885 | -5427779 | -5427779 | -6676302 | -6676302 | -5427779 | -9462164 | -5427779 | -5427779 | -3426221 | -3426221 | -8436429 | -7974897 | -3426221 | -5647910 | -3426221 | -3426221 | -2780902 | -2780902 | -2780902 | -5875704";
     
 }
