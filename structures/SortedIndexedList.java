@@ -29,7 +29,7 @@ public class SortedIndexedList implements PQueue {
      */
     @Override
     public void insert(Integer value) {
-        int index = Collections.binarySearch(this.indexedList, value);
+        int index = Collections.binarySearch(this.indexedList, value, Collections.reverseOrder());
 
         if (index < 0) {
             index = -(index + 1);
@@ -40,7 +40,7 @@ public class SortedIndexedList implements PQueue {
 
     /**
      * Removes and returns the head element of the priority queue.
-     * Time complexity: O(n)
+     * Time complexity: O(1)
      *
      * @return The head element of the priority queue, or null if the queue is empty.
      */
@@ -50,7 +50,7 @@ public class SortedIndexedList implements PQueue {
             return null;
         }
 
-        return this.indexedList.remove(0);
+        return this.indexedList.remove(this.indexedList.size()-1);
     }
 
     /**
@@ -61,7 +61,7 @@ public class SortedIndexedList implements PQueue {
      */
     @Override
     public Integer peekHead() {
-        return this.indexedList.get(0);
+        return this.indexedList.get(this.indexedList.size()-1);
     }
 
     /**
