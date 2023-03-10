@@ -1,6 +1,8 @@
 # Priority Queues
 > Understand the mechanics of the fibonacci heap by taking small steps through other data structures.
 
+In this example, we assume that the PriorityQueues only pop the minimum element within the data structure. Built-in priority queues are adjustable with their comparators and allow for some customization.
+
 ## Data structures (Ranked from slowest to fastest in terms of runtime)
 
 ### Sorted Linked List
