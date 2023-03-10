@@ -1,9 +1,6 @@
 package structures;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * A Fibonacci heap implementation of a priority queue.
@@ -15,6 +12,9 @@ public class FibonacciHeap implements PQueue {
 
     // An array of size two that stores the minimum value in the heap and its index in the heap.
     private Integer[] minimum;
+
+    // An integer to keep track of how many nodes exist in the entire heap.
+    private int nodeCount = 0;
 
     /**
      * Constructs a new FibonacciHeap object.
@@ -38,6 +38,7 @@ public class FibonacciHeap implements PQueue {
 
         Tree newTree = new Tree(new Node(value));
         this.heap.add(newTree);
+        nodeCount++;
     }
 
     /**
@@ -49,19 +50,36 @@ public class FibonacciHeap implements PQueue {
         if (this.heap.isEmpty()) {
             throw new NoSuchElementException("Heap is empty");
         }
+        if(this.heap.size() <= this.minimum[1]) {
+            System.out.println(Arrays.toString(this.minimum));
+        }
         Node minNode = this.heap.get(this.minimum[1]).head;
         int minValue = minNode.value;
 
+        // Add the minimum node's children to the root list
+        for(Node child : this.heap.get(this.minimum[1]).head.children) {
+            this.heap.add(new Tree(child));
+        }
+
         // Remove the minimum node from the heap's root list
         this.heap.remove((int)this.minimum[1]);
-        this.minimum[1] = -1;
-        this.minimum[0] = Integer.MAX_VALUE;
+        nodeCount--;
 
-        // Add the minimum node's children to the root list
-        if (minNode.children != null) {
-            for (Node child : minNode.children) {
-                this.heap.add(new Tree(child));
+        // Update the minimum value
+        if (!this.heap.isEmpty()) {
+            this.minimum[1] = 0;
+            this.minimum[0] = this.heap.get(0).head.value;
+
+            for (int i = 1; i < this.heap.size(); i++) {
+                if (this.heap.get(i).head.value < this.minimum[0]) {
+                    this.minimum[0] = this.heap.get(i).head.value;
+                    this.minimum[1] = i;
+                }
             }
+        } else {
+            this.minimum[1] = -1;
+            this.minimum[0] = Integer.MAX_VALUE;
+            return minValue;
         }
 
         // Consolidate the heap
@@ -70,18 +88,15 @@ public class FibonacciHeap implements PQueue {
         return minValue;
     }
 
+
     /**
      * Consolidates the heap by merging trees with the same degree until no trees with the same degree remain.
      */
     private void consolidate() {
-        int numTrees = this.heap.size();
-        int maxDegree = (int) Math.floor(Math.log(numTrees) / Math.log(1.618));
+        int maxDegree = (int) Math.floor(Math.log(nodeCount) / Math.log(1.618));
 
         // Initialize an array to hold trees of each degree
-        Tree[] degreeArray = new Tree[maxDegree + 1];
-        for (int i = 0; i <= maxDegree; i++) {
-            degreeArray[i] = null;
-        }
+        Tree[] degreeArray = new Tree[maxDegree + 2];
 
         // Make a copy of the heap list to avoid ConcurrentModificationException
         List<Tree> heapCopy = new ArrayList<>(this.heap);
@@ -90,7 +105,7 @@ public class FibonacciHeap implements PQueue {
         for (Tree currentTree : heapCopy) {
             int currentDegree = currentTree.head.children.size();
 
-            while (degreeArray[currentDegree] != null) {
+            while (currentDegree <= maxDegree && degreeArray[currentDegree] != null) {
                 Tree otherTree = degreeArray[currentDegree];
 
                 // Make the current tree the one with the smaller root value
@@ -116,16 +131,17 @@ public class FibonacciHeap implements PQueue {
 
         // Rebuild the heap from the trees in the degree array
         this.heap.clear();
-        for (int i = 0; i <= maxDegree; i++) {
+        for (int i = 0; i <= maxDegree+1; i++) {
             if (degreeArray[i] != null) {
                 this.heap.add(degreeArray[i]);
             }
         }
 
         // Update the minimum value
+        this.minimum[0] = Integer.MAX_VALUE;
         for (int i = 0; i < this.heap.size(); i++) {
             Tree tree = this.heap.get(i);
-            if (tree.head.value < this.minimum[1]) {
+            if (tree.head.value < this.minimum[0]) {
                 this.minimum[0] = tree.head.value;
                 this.minimum[1] = i;
             }
