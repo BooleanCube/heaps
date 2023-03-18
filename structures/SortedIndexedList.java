@@ -23,7 +23,7 @@ public class SortedIndexedList implements PQueue {
 
     /**
      * Inserts an element into the priority queue.
-     * Time complexity: O(log(n))
+     * Time complexity: O(n + log(n))
      *
      * @param value The element to be inserted.
      */
