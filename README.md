@@ -14,8 +14,11 @@ Even though inserting elements may not be the fastest in SortedLinkedLists, sinc
 We just need to return the value of the first element since the SortedLinkedList is already sorted from the insertions.
 
 ### Sorted Indexed List
-#### INSERT - `Time complexity: O(logn)`
-The elements in an indexed list have been assigned indices which means access nodes can be done in O(1) time. That's why we can perform binary search easily to find the proper insertion location of the new element and insert nodes in O(logn) time.
+
+*NOTE:* For faster implementation, sort the indexed list from least to greatest. This makes popping O(n) but will change insertion to O(logn) this evenly spreads out the runtime complexity between functions.
+
+#### INSERT - `Time complexity: O(nlogn)`
+The elements in an indexed list have been assigned indices which means access nodes can be done in O(1) time. That's why we can perform binary search easily to find the proper insertion location of the new element and insert nodes in O(logn) time. However, the additional O(n) comes from the positional insertion of elements.
 #### POP - `Time complexity: O(1)`
 Usually, if the indexed list was sorted in order of lowest to highest, removing the minimum in a priority queue would be O(n) runtime because all nodes following the first one would have to have their indices updated. But, I optimized this `SortedIndexedList` to sort from highest to lowest so that the minimum element in the list is at the end so popping the minimum node would only take O(1) iterations.
 #### PEEK - `Time complexity: O(1)`
